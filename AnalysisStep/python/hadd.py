@@ -42,7 +42,8 @@ def hadd(file, odir, idirs):
         return
     elif not file.endswith('.root'):
         return
-    haddCmd = ['hadd']
+    njobs = min(len(idirs) // 3, 100)
+    haddCmd = ['hadd -j {:d}'.format(njobs)]
     haddCmd.append( file.replace( idirs[0], odir ) )
     for dir in idirs:
         haddCmd.append( file.replace( idirs[0], dir ) )
@@ -62,9 +63,7 @@ def haddRec(odir, idirs):
     try:
         os.mkdir( odir )
     except OSError:
-        print 
-        print 'ERROR: directory in the way. Maybe you ran hadd already in this directory? Remove it and try again'
-        print 
+        print '\nERROR: directory in the way. Maybe you ran hadd already in this directory? Remove it and try again\n'
         raise
     for root,dirs,files in os.walk( idirs[0] ):
         # print root, dirs, files
