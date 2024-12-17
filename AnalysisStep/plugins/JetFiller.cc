@@ -43,7 +43,9 @@ class JetFiller : public edm::EDProducer {
 
   edm::EDGetTokenT<edm::View<pat::Jet> > jetToken;
   int sampleType;
+  std::string runPeriod_;
   int setup;
+  std::string dataTag_;
   const StringCutObjectSelector<pat::Jet, true> cut;
   bool isMC_;
   const std::string bTaggerName;
@@ -75,7 +77,9 @@ class JetFiller : public edm::EDProducer {
 JetFiller::JetFiller(const edm::ParameterSet& iConfig) :
   jetToken(consumes<edm::View<pat::Jet> >(iConfig.getParameter<edm::InputTag>("src"))),
   sampleType(iConfig.getParameter<int>("sampleType")),
+  runPeriod_(iConfig.getParameter<std::string>("runPeriod")),
   setup(iConfig.getParameter<int>("setup")),
+  dataTag_(iConfig.getParameter<std::string>("dataTag")),
   cut(iConfig.getParameter<std::string>("cut")),
   isMC_(iConfig.getParameter<bool>("isMC")),
   bTaggerName(iConfig.getParameter<std::string>("bTaggerName")),

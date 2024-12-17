@@ -1216,7 +1216,9 @@ process.QGTagger.jetsLabel = cms.string('QGL_AK4PFchs')
 process.dressedJets = cms.EDProducer("JetFiller",
     src = cms.InputTag("slimmedJets"),
     sampleType = cms.int32(SAMPLE_TYPE),
+    runPeriod = cms.string("Run2Legacy"),
     setup = cms.int32(LEPTON_SETUP),
+    dataTag = cms.string(DATA_TAG),
     ## Moving pt>20 to pt>30 as we use these jets
     cut = cms.string("pt>20 && abs(eta)<4.7 && userFloat('JetID') && (userFloat('PUjetID') || userFloat('pt_JEC_noJER')>50)"),
     isMC = cms.bool(IsMC),
