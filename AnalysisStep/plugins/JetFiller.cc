@@ -57,6 +57,7 @@ class JetFiller : public edm::EDProducer {
   std::string bTagSFFile;
   std::string bTagMCEffFile;
   BTaggingSFHelper bTagSFHelper;
+  bool useQGtagger_;
   const CutSet<pat::Jet> flags;
   edm::EDGetTokenT<double> rhoToken;
   edm::EDGetTokenT<edm::ValueMap<float> > qgToken;
@@ -91,16 +92,19 @@ JetFiller::JetFiller(const edm::ParameterSet& iConfig) :
   bTagSFFile(iConfig.getParameter<std::string>("bTagSFFile")),
   bTagMCEffFile(iConfig.getParameter<std::string>("bTagMCEffFile")),
   bTagSFHelper(bTagSFFile,bTagMCEffFile),
+  useQGtagger_(iConfig.getParameter<bool>("useQGtagger")),
   flags(iConfig.getParameter<edm::ParameterSet>("flags"))
 {
   rand_.SetSeed(12345);
 
   rhoToken = consumes<double>(LeptonIsoHelper::getEleRhoTag(sampleType, setup));
 
-  qgToken = consumes<edm::ValueMap<float> >(edm::InputTag("QGTagger", "qgLikelihood"));
-  axis2Token = consumes<edm::ValueMap<float> >(edm::InputTag("QGTagger", "axis2"));
-  multToken = consumes<edm::ValueMap<int> >(edm::InputTag("QGTagger", "mult"));
-  ptDToken = consumes<edm::ValueMap<float> >(edm::InputTag("QGTagger", "ptD"));
+  if(useQGtagger_){
+    qgToken = consumes<edm::ValueMap<float> >(edm::InputTag("QGTagger", "qgLikelihood"));
+    axis2Token = consumes<edm::ValueMap<float> >(edm::InputTag("QGTagger", "axis2"));
+    multToken = consumes<edm::ValueMap<int> >(edm::InputTag("QGTagger", "mult"));
+    ptDToken = consumes<edm::ValueMap<float> >(edm::InputTag("QGTagger", "ptD"));
+  }
 
   produces<pat::JetCollection>();
 
@@ -161,14 +165,15 @@ JetFiller::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
 
   //--- q/g tagger
   Handle<edm::ValueMap<float> > qgHandle;
-  iEvent.getByToken(qgToken, qgHandle);
   Handle<edm::ValueMap<float> > axis2Handle;
-  iEvent.getByToken(axis2Token, axis2Handle);
   Handle<edm::ValueMap<int> > multHandle;
-  iEvent.getByToken(multToken, multHandle);
   Handle<edm::ValueMap<float> > ptDHandle;
-  iEvent.getByToken(ptDToken, ptDHandle);
-
+  if(useQGtagger_){
+    iEvent.getByToken(qgToken, qgHandle);
+    iEvent.getByToken(axis2Token, axis2Handle);
+    iEvent.getByToken(multToken, multHandle);
+    iEvent.getByToken(ptDToken, ptDHandle);
+  }
 
   // JEC uncertainty (part 1) - No splitting
   // JetCorrectorParametersCollection refers to the JEC file read from db in MasterPy/ZZ4lAnalysis.py
@@ -209,11 +214,14 @@ JetFiller::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
 
     //--- Retrieve the q/g likelihood
     edm::RefToBase<pat::Jet> jetRef(edm::Ref<edm::View<pat::Jet> >(jetHandle, jet - jetHandle->begin()));
-    float qgLikelihood = (*qgHandle)[jetRef];
-    float axis2 = (*axis2Handle)[jetRef];
-    int mult = (*multHandle)[jetRef];
-    float ptD = (*ptDHandle)[jetRef];
-
+    float qgLikelihood = 0., axis2 = 0., ptD = 0.;
+    int mult = 0;
+    if(useQGtagger_){
+       qgLikelihood = (*qgHandle)   [jetRef];
+       axis2        = (*axis2Handle)[jetRef];
+       mult         = (*multHandle) [jetRef];
+       ptD          = (*ptDHandle)  [jetRef];
+    }
 
     // //--- Get JEC uncertainties
     // jecUnc.setJetEta(jeta);

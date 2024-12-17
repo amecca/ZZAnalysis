@@ -1230,6 +1230,7 @@ process.dressedJets = cms.EDProducer("JetFiller",
     jerType = cms.string("AK4PFchs"),
     bTagSFFile = cms.string(theBTagSFFile),
     bTagMCEffFile = cms.string(theBTagMCEffFile),
+    useQGtagger = cms.bool(True),
     flags = cms.PSet()
     )
 
