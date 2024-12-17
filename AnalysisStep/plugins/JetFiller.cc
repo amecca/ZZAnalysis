@@ -68,6 +68,7 @@ class JetFiller : public edm::EDProducer {
   std::string jecUncFile_;
   std::vector<string> uncSources {};
   std::vector<JetCorrectionUncertainty*> splittedUncerts_;
+  TRandom3 rand_;
 };
 
 
@@ -88,6 +89,7 @@ JetFiller::JetFiller(const edm::ParameterSet& iConfig) :
   bTagSFHelper(bTagSFFile,bTagMCEffFile),
   flags(iConfig.getParameter<edm::ParameterSet>("flags"))
 {
+  rand_.SetSeed(12345);
 
   rhoToken = consumes<double>(LeptonIsoHelper::getEleRhoTag(sampleType, setup));
 
@@ -435,9 +437,7 @@ JetFiller::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
     bool isBtaggedWithSFDn = isBtagged;
     if(isMC_){
       int flav = j.hadronFlavour();
-      TRandom3 rand;
-      rand.SetSeed(abs(static_cast<int>(sin(jphi)*100000)));
-      float R = rand.Uniform();
+      float R = rand_.Uniform();
       float SF   = bTagSFHelper.getSF(central,flav,jpt,jeta);
       float SFUp = bTagSFHelper.getSF(up     ,flav,jpt,jeta);
       float SFDn = bTagSFHelper.getSF(down   ,flav,jpt,jeta);
@@ -506,9 +506,7 @@ JetFiller::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
         pt_jerdn = max( 0., gen_pt + sf_dn*(jpt-gen_pt) );
       }else{
         //- apply smearing
-        TRandom3 rand;
-        rand.SetSeed(abs(static_cast<int>(sin(jphi)*100000)));
-        float smear = rand.Gaus(0,1.);
+        float smear = rand_.Gaus(0,1.);
         float sigma   = sqrt(sf   *sf   -1.) * res_pt*jpt;
         float sigmaup = sqrt(sf_up*sf_up-1.) * res_pt*jpt;
         float sigmadn = sqrt(sf_dn*sf_dn-1.) * res_pt*jpt;
