@@ -27,6 +27,10 @@ SampleToRun = "MC2022EE"
 #SampleToRun = "MCsync_2018Rereco_v7" # for mini vs nano sync
 #SampleToRun = "MCsync_2017UL_v9" # for mini vs nano sync
 
+import sys
+if(len(sys.argv) > 1):
+    SampleToRun = sys.argv[1]
+
 
 ### Customize processing variables.
 #setConf("runMELA", False)
@@ -235,20 +239,27 @@ elif SampleToRun.startswith("MELA_VBS"):
     setConf("LEPTON_SETUP", 2024)
     setConf("IsMC", True)
     setConf("NANOVERSION", 15)
-    setConf("store", "root://cms-xrd-global.cern.ch/")
 
     setConf("probabilities", [])
     import prod.pyFragments.VBS_probs
 
     if(SampleToRun == "MELA_VBS_ZZjj-EWK"):
         setConf("SAMPLENAME", "ZZjj-EWK")
+        # setConf("store", "root://cms-xrd-global.cern.ch/")
         setConf("fileNames", [
-            "/store/mc/RunIII2024Summer24NanoAODv15/ZZJJto4L-EWK_TuneCP5_13p6TeV_madgraph-pythia8/NANOAODSIM/150X_mcRun3_2024_realistic_v2-v2/110000/3ef8745a-d896-4db5-98cc-a6992fd2636d.root"
+            # "/store/mc/RunIII2024Summer24NanoAOD/ZZJJto4L-EWK_TuneCP5_13p6TeV_madgraph-pythia8/NANOAODSIM/140X_mcRun3_2024_realistic_v26-v2/90000/da802eca-7c5e-4803-9343-29faa8bda6cc.root"
+
+            # "/store/mc/RunIII2024Summer24NanoAODv15/ZZJJto4L-EWK_TuneCP5_13p6TeV_madgraph-pythia8/NANOAODSIM/150X_mcRun3_2024_realistic_v2-v2/110000/3ef8745a-d896-4db5-98cc-a6992fd2636d.root"
+            "ZZjj-EWK.root"
+
+            # "/store/mc/Run3Summer22EENanoAODv12/ZZto4L-2Jets_EW_TuneCP5_13p6TeV_madgraph-pythia8/NANOAODSIM/130X_mcRun3_2022_realistic_postEE_v6-v2/2530000/4f6ffdfe-1ffe-44cb-9632-42d185e1f9a8.root"
         ])
     elif(SampleToRun == "MELA_VBS_ZZjj-QCD"):
         setConf("SAMPLENAME", "ZZjj-QCD")
+        # setConf("store", "root://cms-xrd-global.cern.ch/")
         setConf("fileNames", [
-            "/store/mc/RunIII2024Summer24NanoAODv15/ZZJJto4L-QCD_TuneCP5_13p6TeV_madgraph-pythia8/NANOAODSIM/150X_mcRun3_2024_realistic_v2-v2/120000/a92b9c18-7301-41a9-b932-00fae13831de.root"
+            # "/store/mc/RunIII2024Summer24NanoAODv15/ZZJJto4L-QCD_TuneCP5_13p6TeV_madgraph-pythia8/NANOAODSIM/150X_mcRun3_2024_realistic_v2-v2/120000/a92b9c18-7301-41a9-b932-00fae13831de.root"
+            "ZZjj-QCD.root"
         ])
     else:
         raise ValueError("unknown sample %s" %(sample))
@@ -266,7 +277,7 @@ def customizeProcessForLocal(p) :
     p.json = json # replace JSON
         
     ### Run only on the first N events in the file
-    #p.maxEntries = 10000
+    p.maxEntries = 1000
 
     ### Select specific events to debug
     #p.cut = "run==316239  && luminosityBlock==226 && event==284613817"
