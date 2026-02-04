@@ -489,6 +489,7 @@ class MyBatchManager:
        
        variables = splitComponents[value].variables | batchManager.addVariables
        pyFragments = splitComponents[value].pyFragments
+       pyFragments.setdefault('VBS_probs.py', None)
 
        if not 'IsMC' in variables: 
            variables['IsMC'] = True
