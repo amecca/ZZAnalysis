@@ -50,6 +50,7 @@ ttH126       ,,0.5591,0.0008386,,/TTH-Hto2Zto4L_Par-M-126_TuneCP5_13p6TeV_powheg
 
 ###,,,,,,,,,,,qq->ZZ background  - xsec taken from powheg gridpack
 ZZTo4l                          ,,1.39,,,/ZZto4L_TuneCP5_13p6TeV_powheg-pythia8/RunIII2024Summer24NanoAODv15-150X_mcRun3_2024_realistic_v2-v2/NANOAODSIM,dbs,root://cms-xrd-global.cern.ch/,2,PROCESS_CR=True;APPLY_K_NNLOQCD_ZZQQB=True;APPLY_K_NLOEW_ZZQQB=True;NANOVERSION=15;LEPTON_SETUP=2024,,
+ZZTo4l_1Jets                    ,,1.499,,,/ZZto4L-1Jets_TuneCP5_13p6TeV_amcatnloFXFX-pythia8/RunIII2024Summer24NanoAODv15-150X_mcRun3_2024_realistic_v2-v2/NANOAODSIM,dbs,root://cms-xrd-global.cern.ch/,2,PROCESS_CR=True;APPLY_K_NNLOQCD_ZZQQB=True;APPLY_K_NLOEW_ZZQQB=True;NANOVERSION=15;LEPTON_SETUP=2024,VBS_probs.py,xsec from XSDB
 
 ###,,,,,,,,,,,gg->ZZ background - xsec taken from gridpack
 gg4l_POWHEG                     ,,0.00440761,,,MISSING,dbs,root://cms-xrd-global.cern.ch/,2PROCESS_CR=False;APPLY_K_NNLOQCD_ZZGG=1;NANOVERSION=15;LEPTON_SETUP=2024,,private production R. Covarelli
